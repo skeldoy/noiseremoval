@@ -2,26 +2,40 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, Dataset
-from torchvision import transforms
-from torchvision.datasets import ImageFolder
-import numpy as np
+from torchvision import transforms, datasets
 from PIL import Image
 import os
 
-# Custom dataset to load noisy images
+# Define the actual path to your dataset directory
+root_dir = '../data'
+
+# Update the NoisyImageDataset class to load images from the new directory
 class NoisyImageDataset(Dataset):
     def __init__(self, root_dir, transform=None):
-        self.dataset = ImageFolder(root_dir, transform=transform)
+        self.root_dir = root_dir
         self.transform = transform
+        self.image_files = [os.path.join(root_dir, f) for f in os.listdir(root_dir) if f.endswith('.png')]
 
     def __len__(self):
-        return len(self.dataset)
+        return len(self.image_files)
 
     def __getitem__(self, idx):
-        noisy_img, _ = self.dataset[idx]
-        return noisy_img, noisy_img  # Both input and target are noisy images
+        image = Image.open(self.image_files[idx])
+        if self.transform:
+            image = self.transform(image)
+        return image, image  # Both input and target are noisy images
 
-# Simple CNN model for denoising
+# Define image transformations
+transform = transforms.Compose([
+    transforms.Resize((576, 1024)),  # Resize images to match their dimensions
+    transforms.ToTensor()
+])
+
+# Initialize the dataset with the actual root directory
+dataset = NoisyImageDataset(root_dir, transform=transform)
+dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
+
+# Define the denoising CNN model
 class DenoisingCNN(nn.Module):
     def __init__(self):
         super(DenoisingCNN, self).__init__()
@@ -29,12 +43,13 @@ class DenoisingCNN(nn.Module):
             nn.Conv2d(3, 64, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.Conv2d(64, 64, kernel_size=3, padding=1),
-            nn.ReLU()
+            nn.ReLU(),
+            nn.MaxPool2d(2, 2)
         )
         self.decoder = nn.Sequential(
-            nn.Conv2d(64, 64, kernel_size=3, padding=1),
+            nn.ConvTranspose2d(64, 64, kernel_size=3, stride=2, padding=1, output_padding=1),
             nn.ReLU(),
-            nn.Conv2d(64, 3, kernel_size=3, padding=1),
+            nn.ConvTranspose2d(64, 3, kernel_size=3, stride=2, padding=1, output_padding=1),
             nn.Sigmoid()
         )
 
@@ -43,64 +58,40 @@ class DenoisingCNN(nn.Module):
         x = self.decoder(x)
         return x
 
-# Hyperparameters
-lr = 0.001
-batch_size = 32
-epochs = 50
-image_size = 64
+# Initialize the denoising CNN model
+model = DenoisingCNN()
 
-# Image transformations
-transform = transforms.Compose([
-    transforms.Resize((image_size, image_size)),
-    transforms.ToTensor(),
-    transforms.Normalize((0.5,), (0.5,))
-])
-
-# Load dataset
-dataset = NoisyImageDataset(root_dir="path_to_your_dataset", transform=transform)
-dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
-
-# Initialize model
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = DenoisingCNN().to(device)
-
-# Loss function and optimizer
+# Define loss function and optimizer
 criterion = nn.MSELoss()
-optimizer = optim.Adam(model.parameters(), lr=lr)
+optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-# Training loop
-for epoch in range(epochs):
+# Train the model
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model.to(device)
+
+num_epochs = 10
+
+for epoch in range(num_epochs):
+    running_loss = 0.0
     for i, data in enumerate(dataloader, 0):
-        noisy_imgs, _ = data
-        noisy_imgs = noisy_imgs.to(device)
+        inputs, targets = data
+        inputs, targets = inputs.to(device), targets.to(device)
 
         optimizer.zero_grad()
-        outputs = model(noisy_imgs)
-        loss = criterion(outputs, noisy_imgs)
+
+        outputs = model(inputs)
+        loss = criterion(outputs, targets)
         loss.backward()
         optimizer.step()
 
-    print(f'Epoch [{epoch+1}/{epochs}], Loss: {loss.item():.4f}')
+        running_loss += loss.item()
+        if i % 100 == 99:    # Print every 100 mini-batches
+            print('[%d, %5d] loss: %.3f' %
+                  (epoch + 1, i + 1, running_loss / 100))
+            running_loss = 0.0
 
-# Save model
+print('Finished Training')
+
+# Save the trained model
 torch.save(model.state_dict(), 'denoising_cnn.pth')
-
-# Denoise and display images
-model.eval()
-with torch.no_grad():
-    for i in range(10):
-        noisy_img, _ = dataset[i]
-        noisy_img = noisy_img.unsqueeze(0).to(device)
-        denoised_img = model(noisy_img).squeeze().cpu().numpy().transpose(1, 2, 0)
-
-        plt.figure(figsize=(6, 6))
-        plt.subplot(1, 2, 1)
-        plt.imshow(noisy_img.squeeze().cpu().numpy().transpose(1, 2, 0) * 0.5 + 0.5)
-        plt.title('Noisy Image')
-        plt.axis('off')
-        plt.subplot(1, 2, 2)
-        plt.imshow(denoised_img * 0.5 + 0.5)
-        plt.title('Denoised Image')
-        plt.axis('off')
-        plt.show()
 

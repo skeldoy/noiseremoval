@@ -1,40 +1,39 @@
 # noiseremoval
 Examples of different approaches of doing noise removal with neural networks. Primary intent is imagery but this applies to ever single modality of signal. 
 
-
-pip install -r requirements.txt
-
+## Installing this shit
+> pip install -r requirements.txt
 
 Then to quickly test your setup is working properly:
 
+to test pytorch:
+> python3 test-pytorch-setup.py
 
-python3 test-pytorch-setup.py
+to test tensorflow:
+> python3 test-tensorflow-setup.py
 
 
-python3 test-tensorflow-setup.py
-
-
-
+## Thingses
 Then we have a couple of ways to denoise:
 
 
-Autoencoders (tensorflow)
+**Autoencoders** (tensorflow)
 
 
-Generative Adversarial Networks (GANs) (pytorch)
+**Generative Adversarial Networks** (GANs) (pytorch)
 
 
-Noise2Noise (pytorch)
+**Noise2Noise** (pytorch)
 
 
-CycleGAN (tensorflow)
+**CycleGAN** (tensorflow)
 
 
-Convolutional Neural Networks (CNNs) (pytorch)
+**Convolutional Neural Networks** (CNNs) (pytorch)
 
 
 
-
+## Caveats:
 Note that this is just example code and needs a lot of adaptation for them to work on your datasets.
 
 For denoising without clean images to train on I would use noise2noise or cycleGAN.

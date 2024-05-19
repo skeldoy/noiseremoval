@@ -1,26 +1,37 @@
 # noiseremoval
-Examples of different approaches of doing noise removal with neural networks.
+Examples of different approaches of doing noise removal with neural networks. Primary intent is imagery but this applies to ever single modality of signal. 
+
 
 pip install -r requirements.txt
 
+
 Then to quickly test your setup is working properly:
 
+
 python3 test-pytorch-setup.py
+
 
 python3 test-tensorflow-setup.py
 
 
+
 Then we have a couple of ways to denoise:
+
 
 Autoencoders (tensorflow)
 
+
 Generative Adversarial Networks (GANs) (pytorch)
+
 
 Noise2Noise (pytorch)
 
+
 CycleGAN (tensorflow)
 
+
 Convolutional Neural Networks (CNNs) (pytorch)
+
 
 
 

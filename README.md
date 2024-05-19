@@ -1,4 +1,4 @@
-# noiseremoval
+# noiseremoval / fuckartifacts
 Examples of different approaches of doing noise removal with neural networks. Primary intent is imagery but this applies to ever single modality of signal. 
 
 ## Installing this shit

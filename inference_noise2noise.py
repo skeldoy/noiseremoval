@@ -16,9 +16,14 @@ class DenoisingCNN(nn.Module):
             nn.MaxPool2d(2, 2),
             nn.Conv2d(128, 256, kernel_size=3, padding=1),
             nn.ReLU(),
+            nn.MaxPool2d(2, 2),
+            nn.Conv2d(256, 512, kernel_size=3, padding=1),
+            nn.ReLU(),
             nn.MaxPool2d(2, 2)
         )
         self.decoder = nn.Sequential(
+            nn.ConvTranspose2d(512, 256, kernel_size=3, stride=2, padding=1, output_padding=1),
+            nn.ReLU(),
             nn.ConvTranspose2d(256, 128, kernel_size=3, stride=2, padding=1, output_padding=1),
             nn.ReLU(),
             nn.ConvTranspose2d(128, 64, kernel_size=3, stride=2, padding=1, output_padding=1),
@@ -47,7 +52,7 @@ transform = transforms.Compose([
 noisy_images_dir = '../data'
 
 # Define the directory to save denoised images
-denoised_images_dir = '../cleaned'
+denoised_images_dir = '../cleaned2'
 os.makedirs(denoised_images_dir, exist_ok=True)
 
 # Loop through all noisy images in the directory
@@ -70,6 +75,6 @@ for filename in os.listdir(noisy_images_dir):
         # Save the denoised image
         denoised_image_path = os.path.join(denoised_images_dir, filename)
         denoised_image.save(denoised_image_path)
-        print(filename)
+
 print('Denoising complete. Denoised images saved in', denoised_images_dir)
 

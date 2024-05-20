@@ -33,7 +33,7 @@ transform = transforms.Compose([
 
 # Initialize the dataset with the actual root directory
 dataset = NoisyImageDataset(root_dir, transform=transform)
-dataloader = DataLoader(dataset, batch_size=6, shuffle=True)  # Use smaller batch size if GPU memory is an issue
+dataloader = DataLoader(dataset, batch_size=4, shuffle=True)  # Use smaller batch size if GPU memory is an issue
 
 # Define the denoising CNN model
 class DenoisingCNN(nn.Module):
@@ -47,9 +47,14 @@ class DenoisingCNN(nn.Module):
             nn.MaxPool2d(2, 2),  # 576x1024 -> 288x512
             nn.Conv2d(128, 256, kernel_size=3, padding=1),
             nn.ReLU(),
-            nn.MaxPool2d(2, 2)   # 288x512 -> 144x256
+            nn.MaxPool2d(2, 2),  # 288x512 -> 144x256
+            nn.Conv2d(256, 512, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(2, 2)   # 144x256 -> 72x128
         )
         self.decoder = nn.Sequential(
+            nn.ConvTranspose2d(512, 256, kernel_size=3, stride=2, padding=1, output_padding=1),
+            nn.ReLU(),  # 72x128 -> 144x256
             nn.ConvTranspose2d(256, 128, kernel_size=3, stride=2, padding=1, output_padding=1),
             nn.ReLU(),  # 144x256 -> 288x512
             nn.ConvTranspose2d(128, 64, kernel_size=3, stride=2, padding=1, output_padding=1),
@@ -69,12 +74,13 @@ model = DenoisingCNN()
 # Define loss function and optimizer
 criterion = nn.MSELoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
+scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.1)
 
 # Train the model
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
-num_epochs = 20 
+num_epochs = 20  # Increase the number of epochs
 
 for epoch in range(num_epochs):
     running_loss = 0.0
@@ -87,7 +93,7 @@ for epoch in range(num_epochs):
         inputs, targets = inputs.to(device), targets.to(device)
 
         optimizer.zero_grad()
-        print(".", end='',flush=True)
+        print(".", end='', flush=True)
         outputs = model(inputs)
         loss = criterion(outputs, targets)
         loss.backward()
@@ -99,6 +105,8 @@ for epoch in range(num_epochs):
                   (epoch + 1, i + 1, running_loss / 100))
             running_loss = 0.0
     print("")
+    scheduler.step()
+
 print('Finished Training')
 
 # Save the trained model

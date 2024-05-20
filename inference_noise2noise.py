@@ -70,6 +70,6 @@ for filename in os.listdir(noisy_images_dir):
         # Save the denoised image
         denoised_image_path = os.path.join(denoised_images_dir, filename)
         denoised_image.save(denoised_image_path)
-
+        print(filename)
 print('Denoising complete. Denoised images saved in', denoised_images_dir)
 

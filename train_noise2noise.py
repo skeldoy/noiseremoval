@@ -74,16 +74,20 @@ optimizer = optim.Adam(model.parameters(), lr=0.001)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
-num_epochs = 100
+num_epochs = 20 
 
 for epoch in range(num_epochs):
     running_loss = 0.0
+    print(epoch, end='',flush=True)
+    print("/", end='',flush=True)
+    print(num_epochs, end='',flush=True)
+    print(":", end='',flush=True)
     for i, data in enumerate(dataloader, 0):
         inputs, targets = data
         inputs, targets = inputs.to(device), targets.to(device)
 
         optimizer.zero_grad()
-
+        print(".", end='',flush=True)
         outputs = model(inputs)
         loss = criterion(outputs, targets)
         loss.backward()
@@ -94,7 +98,7 @@ for epoch in range(num_epochs):
             print('[%d, %5d] loss: %.3f' %
                   (epoch + 1, i + 1, running_loss / 100))
             running_loss = 0.0
-
+    print("")
 print('Finished Training')
 
 # Save the trained model

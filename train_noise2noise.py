@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, Dataset
-from torchvision import transforms, datasets
+from torchvision import transforms
 from PIL import Image
 import os
 
@@ -20,7 +20,7 @@ class NoisyImageDataset(Dataset):
         return len(self.image_files)
 
     def __getitem__(self, idx):
-        image = Image.open(self.image_files[idx])
+        image = Image.open(self.image_files[idx]).convert('RGB')
         if self.transform:
             image = self.transform(image)
         return image, image  # Both input and target are noisy images
@@ -33,7 +33,7 @@ transform = transforms.Compose([
 
 # Initialize the dataset with the actual root directory
 dataset = NoisyImageDataset(root_dir, transform=transform)
-dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
+dataloader = DataLoader(dataset, batch_size=4, shuffle=True)  # Use smaller batch size if GPU memory is an issue
 
 # Define the denoising CNN model
 class DenoisingCNN(nn.Module):
@@ -42,14 +42,19 @@ class DenoisingCNN(nn.Module):
         self.encoder = nn.Sequential(
             nn.Conv2d(3, 64, kernel_size=3, padding=1),
             nn.ReLU(),
-            nn.Conv2d(64, 64, kernel_size=3, padding=1),
+            nn.Conv2d(64, 128, kernel_size=3, padding=1),
             nn.ReLU(),
-            nn.MaxPool2d(2, 2)
+            nn.MaxPool2d(2, 2),  # 576x1024 -> 288x512
+            nn.Conv2d(128, 256, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(2, 2)   # 288x512 -> 144x256
         )
         self.decoder = nn.Sequential(
-            nn.ConvTranspose2d(64, 64, kernel_size=3, stride=2, padding=1, output_padding=1),
-            nn.ReLU(),
-            nn.ConvTranspose2d(64, 3, kernel_size=3, stride=2, padding=1, output_padding=1),
+            nn.ConvTranspose2d(256, 128, kernel_size=3, stride=2, padding=1, output_padding=1),
+            nn.ReLU(),  # 144x256 -> 288x512
+            nn.ConvTranspose2d(128, 64, kernel_size=3, stride=2, padding=1, output_padding=1),
+            nn.ReLU(),  # 288x512 -> 576x1024
+            nn.ConvTranspose2d(64, 3, kernel_size=3, padding=1),
             nn.Sigmoid()
         )
 

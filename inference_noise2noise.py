@@ -76,7 +76,6 @@ for filename in os.listdir(noisy_images_dir):
         # Save the denoised image
         denoised_image_path = os.path.join(denoised_images_dir, filename)
         try:
-            print(denoised_image)
             denoised_image.save(denoised_image_path)
             print("OK")
         except Exception as e:

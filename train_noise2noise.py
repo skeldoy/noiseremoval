@@ -84,13 +84,13 @@ ssim_loss = SSIMLoss()
 
 # Define optimizer
 optimizer = optim.Adam(model.parameters(), lr=0.001)
-scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.1)
+scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.1)
 
 # Train the model
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
-num_epochs = 20  # Increase the number of epochs
+num_epochs = 40  # Increase the number of epochs
 
 for epoch in range(num_epochs):
     running_loss = 0.0

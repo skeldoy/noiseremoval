@@ -5,6 +5,7 @@ from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
 from PIL import Image
 import os
+from torchmetrics.functional import structural_similarity_index_measure as ssim
 
 # Define the actual path to your dataset directory
 root_dir = '../data'
@@ -71,8 +72,17 @@ class DenoisingCNN(nn.Module):
 # Initialize the denoising CNN model
 model = DenoisingCNN()
 
-# Define loss function and optimizer
-criterion = nn.MSELoss()
+# Define SSIM loss function
+class SSIMLoss(nn.Module):
+    def __init__(self):
+        super(SSIMLoss, self).__init__()
+
+    def forward(self, img1, img2):
+        return 1 - ssim(img1, img2)
+
+ssim_loss = SSIMLoss()
+
+# Define optimizer
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.1)
 
@@ -88,14 +98,15 @@ for epoch in range(num_epochs):
     print("/", end='',flush=True)
     print(num_epochs, end='',flush=True)
     print(":", end='',flush=True)
+ 
     for i, data in enumerate(dataloader, 0):
         inputs, targets = data
         inputs, targets = inputs.to(device), targets.to(device)
 
         optimizer.zero_grad()
-        print(".", end='', flush=True)
+        print(".", end='',flush=True)
         outputs = model(inputs)
-        loss = criterion(outputs, targets)
+        loss = ssim_loss(outputs, targets)
         loss.backward()
         optimizer.step()
 

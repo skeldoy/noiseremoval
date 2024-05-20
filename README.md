@@ -23,7 +23,7 @@ Then we have a couple of ways to denoise:
 **Generative Adversarial Networks** (GANs) (pytorch)
 
 
-**Noise2Noise** (pytorch)
+**Noise2Noise** (pytorch): Kinda works (Expects noise in ../data and will output to ../cleaned)
 
 
 **CycleGAN** (tensorflow)

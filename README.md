@@ -2,12 +2,15 @@
 Examples of different approaches of doing noise removal with neural networks. Primary intent is imagery but this applies to ever single modality of signal. 
 
 ## Installing this shit
+> git clone yadayada....; cd yadayada.... # then make the venv:
 
 > python3 -m venv thisshit
 
 > ./thisshit/bin/pip install -r requirements.txt
 
 > ./thisshit/bin/activate
+
+By this time you should have a good setup for playing with this shit without fucking up your base py setup.
 
 
 Then to quickly test your setup is working properly:

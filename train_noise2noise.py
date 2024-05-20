@@ -33,7 +33,7 @@ transform = transforms.Compose([
 
 # Initialize the dataset with the actual root directory
 dataset = NoisyImageDataset(root_dir, transform=transform)
-dataloader = DataLoader(dataset, batch_size=4, shuffle=True)  # Use smaller batch size if GPU memory is an issue
+dataloader = DataLoader(dataset, batch_size=6, shuffle=True)  # Use smaller batch size if GPU memory is an issue
 
 # Define the denoising CNN model
 class DenoisingCNN(nn.Module):
@@ -74,7 +74,7 @@ optimizer = optim.Adam(model.parameters(), lr=0.001)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
-num_epochs = 10
+num_epochs = 100
 
 for epoch in range(num_epochs):
     running_loss = 0.0

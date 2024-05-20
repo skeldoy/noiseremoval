@@ -4,7 +4,7 @@ from tensorflow.keras.models import Model
 
 # Define the generator model
 def build_generator():
-    inputs = Input(shape=(256, 256, 3))
+    inputs = Input(shape=(576, 1024, 3))
     
     # Encoder
     x = Conv2D(64, (4, 4), strides=2, padding='same')(inputs)
@@ -27,7 +27,7 @@ def build_generator():
 
 # Define the discriminator model
 def build_discriminator():
-    inputs = Input(shape=(256, 256, 3))
+    inputs = Input(shape=(576, 1024, 3))
     
     x = Conv2D(64, (4, 4), strides=2, padding='same')(inputs)
     x = LeakyReLU(alpha=0.2)(x)
@@ -78,6 +78,25 @@ def train_step(noisy_images):
     generator_optimizer.apply_gradients(zip(gradients_of_generator, G.trainable_variables))
     discriminator_optimizer.apply_gradients(zip(gradients_of_discriminator, D.trainable_variables))
 
+image_data_dir = "../data"
+batch_size = 215
+img_height = 576
+img_width = 1024
+
+dataset = tf.keras.preprocessing.image_dataset_from_directory(
+    image_data_dir,
+    validation_split=0.2,
+    subset="training",
+    seed=123,
+    image_size=(img_height, img_width),
+    batch_size=batch_size
+)
+
+dataset = dataset.map(lambda x, y: (x / 255.0, y))  # Normalize pixel values to [0, 1]
+dataset = dataset.shuffle(buffer_size=1000).batch(batch_size)
+
+
+epochs = 20
 # Training loop
 for epoch in range(epochs):
     for image_batch in dataset:

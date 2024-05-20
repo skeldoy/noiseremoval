@@ -49,7 +49,7 @@ transform = transforms.Compose([
 ])
 
 # Define the directory containing the noisy images
-noisy_images_dir = '../data'
+noisy_images_dir = '../data/all'
 
 # Define the directory to save denoised images
 denoised_images_dir = "../cleaned"

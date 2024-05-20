@@ -8,7 +8,7 @@ import os
 from torchmetrics.functional import structural_similarity_index_measure as ssim
 
 # Define the actual path to your dataset directory
-root_dir = '../data/all'
+root_dir = '../data/training'
 
 # Update the NoisyImageDataset class to load images from the new directory
 class NoisyImageDataset(Dataset):

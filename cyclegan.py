@@ -64,6 +64,7 @@ discriminator_optimizer = tf.optimizers.Adam(2e-4, beta_1=0.5)
 @tf.function
 def train_step(noisy_images):
     with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
+        print(noisy_images)
         generated_images = G(noisy_images, training=True)
         
         real_output = D(noisy_images, training=True)
@@ -100,6 +101,7 @@ epochs = 20
 # Training loop
 for epoch in range(epochs):
     for image_batch in dataset:
+        print(image_batch)
         train_step(image_batch)
     print(f'Epoch {epoch+1}/{epochs} completed')
 

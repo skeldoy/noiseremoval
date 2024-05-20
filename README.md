@@ -23,10 +23,10 @@ Then we have a couple of ways to denoise:
 **Generative Adversarial Networks** (GANs) (pytorch)
 
 
-**Noise2Noise** (pytorch): Kinda works (Expects noise in ../data and will output to ../cleaned)
+**Noise2Noise** (pytorch): Kinda works (Expects noisy stuff in ../data/training and will output to ../data/cleaned)
 
 
-**CycleGAN** (tensorflow)
+**CycleGAN** (tensorflow): Not working (Expects noisy stuff in ../data/training)
 
 
 **Convolutional Neural Networks** (CNNs) (pytorch)

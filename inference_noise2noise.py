@@ -52,12 +52,13 @@ transform = transforms.Compose([
 noisy_images_dir = '../data'
 
 # Define the directory to save denoised images
-denoised_images_dir = '../cleaned'
+denoised_images_dir = "../cleaned"
 os.makedirs(denoised_images_dir, exist_ok=True)
 
 # Loop through all noisy images in the directory
 for filename in os.listdir(noisy_images_dir):
     if filename.endswith('.png'):
+        print("Processing ", filename, ": ",end='',flush=True)
         # Load the noisy image
         noisy_image_path = os.path.join(noisy_images_dir, filename)
         noisy_image = Image.open(noisy_image_path).convert('RGB')
@@ -74,5 +75,11 @@ for filename in os.listdir(noisy_images_dir):
 
         # Save the denoised image
         denoised_image_path = os.path.join(denoised_images_dir, filename)
-        denoised_image.save
-        print(filename)
+        try:
+            print(denoised_image)
+            denoised_image.save(denoised_image_path)
+            print("OK")
+        except Exception as e:
+            print("Error saving image: ", e)
+
+print("All done")

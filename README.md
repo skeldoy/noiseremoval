@@ -35,7 +35,7 @@ Then we have a couple of ways to denoise:
 **Noise2Noise** (pytorch): Kinda works (Expects noisy stuff in ../data/training and will output to ../data/cleaned)
 
 
-**CycleGAN** (tensorflow): Not working (Expects noisy stuff in ../data/training)
+**CycleGAN** (tensorflow): Kinda works (Expects noisy stuff in ../data/training outputs to ../data/clean)
 
 
 **Convolutional Neural Networks** (CNNs) (pytorch)

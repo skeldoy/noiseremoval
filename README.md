@@ -26,7 +26,7 @@ to test tensorflow:
 Then we have a couple of ways to denoise:
 
 
-**Autoencoders** (tensorflow)
+**Autoencoders** (tensorflow): Getting there. Some progress has been done.
 
 
 **Generative Adversarial Networks** (GANs) (pytorch)

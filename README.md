@@ -26,27 +26,17 @@ to test tensorflow:
 Then we have a couple of ways to denoise:
 
 
-**Autoencoders** (tensorflow): Getting there. Some progress has been done.
+**Autoencoders** (tensorflow): Kinda works.
 
 
-**Generative Adversarial Networks** (GANs) (pytorch)
+**Noise2Noise** (pytorch): Kinda works.
 
 
-**Noise2Noise** (pytorch): Kinda works (Expects noisy stuff in ../data/training and will output to ../data/cleaned)
-
-
-**CycleGAN** (tensorflow): Kinda works (Expects noisy stuff in ../data/training outputs to ../data/clean)
-
-
-**Convolutional Neural Networks** (CNNs) (pytorch)
+**CycleGAN** (tensorflow): Kinda works.
 
 
 
 ## Caveats:
 Note that this is just example code and needs a lot of adaptation for them to work on your datasets.
 
-For denoising without clean images to train on I would use noise2noise or cycleGAN.
-
-
-And again: This is just boiler plate example code and does not work "out of the box" apart from some of the examples that will generate random data and train on it.
 

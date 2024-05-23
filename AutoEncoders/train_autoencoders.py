@@ -46,7 +46,7 @@ epochs = 50
 
 # Build the autoencoder
 autoencoder = build_autoencoder(input_shape)
-autoencoder.compile(optimizer='adam', loss='mse')
+autoencoder.compile(optimizer='adam', loss='mae') #MAE or MSE ??
 
 # Load the dataset
 noisy_images = load_dataset(image_dir, img_height, img_width)
@@ -69,5 +69,5 @@ def denoise_image(image_path, save_path, model):
     denoised_img.save(save_path)
 
 # Example usage
-denoise_image('noisy_image.jpg', 'denoised_image.jpg', autoencoder)
+#denoise_image('noisy_image.jpg', 'denoised_image.jpg', autoencoder)
 

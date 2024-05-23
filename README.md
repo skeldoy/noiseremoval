@@ -38,6 +38,7 @@ Then we have a couple of ways to denoise:
 **CycleGAN** (tensorflow): Kinda works.
 
 
+**Visualize**: A tool for comparing all the four images.
 
 ## Caveats:
 Note that this is just example code and needs a lot of adaptation for them to work on your datasets.

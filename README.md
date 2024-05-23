@@ -1,19 +1,22 @@
-# noiseremoval / fuckartifacts
+# noiseremoval
 Examples of different approaches of doing noise removal with neural networks. Primary intent is imagery but this applies to ever single modality of signal. 
+The approaches are good for situations where you don't have any clean/denoised imagery to work with. Examples of that can be weird sensors, old photos, files with artifacts from compression and/or hardware. I have not gotten around to actually testing this stuff with a decent dataset, so I am not really sure how the results are. 
 
-## Installing this shit
+## Installing
 Make sure you have cuda 12.3 and libcudnn-frontend-dev/mantic,mantic 0.8+ds-1 all + nvidia-cudnn/mantic 8.9.2.26~cuda12+1 amd64 ... maybe other things as well.. Not really sure..
 
 
 > git clone yadayada....; cd yadayada.... # then make the venv:
 
-> python3 -m venv thisshit
+> python3 -m venv .
 
-> ./thisshit/bin/pip install -r requirements.txt
+> source ./bin/activate
 
-> ./thisshit/bin/activate
+> ./bin/pip install -r requirements.txt
 
-By this time you should have a good setup for playing with this shit without fucking up your base py setup.
+
+
+By this time you should have a good setup for playing with this stuff without messing up your base py setup.
 
 
 Then to quickly test your setup is working properly:

@@ -52,7 +52,7 @@ transform = transforms.Compose([
 noisy_images_dir = '../data/training'
 
 # Define the directory to save denoised images
-denoised_images_dir = "../data/cleaned"
+denoised_images_dir = "../data/n2n"
 os.makedirs(denoised_images_dir, exist_ok=True)
 
 # Loop through all noisy images in the directory

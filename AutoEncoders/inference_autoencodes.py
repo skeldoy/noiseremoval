@@ -8,7 +8,7 @@ input_shape = (576, 1024, 3)
 img_height, img_width, _ = input_shape
 
 # Load the trained autoencoder model
-autoencoder = load_model('generator_model.h5')
+autoencoder = load_model('denoising_autoencoder.h5')
 
 # Function to denoise an image using the trained autoencoder
 def denoise_image(image_path, save_path, model):
@@ -23,7 +23,7 @@ def denoise_image(image_path, save_path, model):
 
 # Paths to the input and output directories
 input_dir = "../data/training"
-output_dir = "../data/denoised"
+output_dir = "../data/autoencoders"
 
 # Create the output directory if it does not exist
 os.makedirs(output_dir, exist_ok=True)

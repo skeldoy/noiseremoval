@@ -21,7 +21,7 @@ generator = load_model('generator_model.h5')
 
 # Directory containing noisy images to be denoised
 input_dir = "../data/training"
-output_dir = "../data/clean"
+output_dir = "../data/cyclegan"
 
 # Ensure the output directory exists
 os.makedirs(output_dir, exist_ok=True)

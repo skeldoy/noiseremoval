@@ -36,5 +36,4 @@ for img_filename in os.listdir(input_dir):
     # Denoise and save the image
     denoise_image(input_img_path, output_img_path, autoencoder)
 
-print("Denoising complete. Denoised images are saved in the '../data/denoised' directory.")
 

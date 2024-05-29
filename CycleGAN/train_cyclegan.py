@@ -4,6 +4,13 @@ from tensorflow.keras.models import Model
 
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
+
+image_data_dir = "../data"
+batch_size = 1  # Use a smaller batch size to avoid memory issues
+img_height = 576
+img_width = 1024
+
+
 datagen = ImageDataGenerator(
     rotation_range=20,
     width_shift_range=0.2,
@@ -93,7 +100,7 @@ def train_step(noisy_images):
         real_output = D(noisy_images, training=True)
         fake_output = D(generated_images, training=True)
         
-        gen_loss = generator_loss(fake_output)
+        gen_loss = generator_loss(fake_output,noisy_images,generated_images)
         disc_loss = discriminator_loss(real_output, fake_output)
         
     gradients_of_generator = gen_tape.gradient(gen_loss, G.trainable_variables)
@@ -101,11 +108,6 @@ def train_step(noisy_images):
     
     generator_optimizer.apply_gradients(zip(gradients_of_generator, G.trainable_variables))
     discriminator_optimizer.apply_gradients(zip(gradients_of_discriminator, D.trainable_variables))
-
-image_data_dir = "../data"
-batch_size = 8  # Use a smaller batch size to avoid memory issues
-img_height = 576
-img_width = 1024
 
 dataset = tf.keras.preprocessing.image_dataset_from_directory(
     image_data_dir,

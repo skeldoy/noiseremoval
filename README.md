@@ -14,6 +14,7 @@ Make sure you have cuda 12.3 and libcudnn-frontend-dev/mantic,mantic 0.8+ds-1 al
 
 > ./bin/pip install -r requirements.txt
 
+> ./bin/pip install opencv-python .. since I have not added it to the thing
 
 
 By this time you should have a good setup for playing with this stuff without messing up your base py setup.
@@ -32,19 +33,24 @@ to test tensorflow:
 Then we have a couple of ways to denoise:
 
 
-**Autoencoders** (tensorflow): Kinda works.
+**Autoencoders** (tensorflow): Should work fine'ish.
 
 
-**Noise2Noise** (pytorch): Kinda works.
+**Noise2Noise** (pytorch): A little better - but it's a classic CNN.
 
 
-**CycleGAN** (tensorflow): Kinda works.
+**CycleGAN** (tensorflow): The most promising of the three.
 
 
 **Visualize**: A tool for comparing all the four images.
 
+
+**Tracker**: A basic resnet tracker for doing bounding boxes.
+
+
 ## Caveats:
 Note that this is just example code and needs a lot of adaptation for them to work on your datasets.
-All of them expects input in data/training and will output in their own directory under data. 
+
+All of them expect input in data/training and will output in their own directory under data. 
 
 

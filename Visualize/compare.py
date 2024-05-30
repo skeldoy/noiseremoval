@@ -8,7 +8,8 @@ dirs = {
     "autoencoders": "../data/autoencoders",
     "n2n": "../data/n2n",
     "cyclegan": "../data/cyclegan",
-    "blindspot": "../data/blindspot"
+    "blindspot": "../data/blindspot",
+    "cgan" : "../data/cgan"
 }
 
 # Get list of image files from the 'training' directory

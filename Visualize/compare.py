@@ -36,8 +36,11 @@ def load_images(index):
         textheight = textbbox[3] - textbbox[1]
         width, height = img.size
         # Position the text at the bottom right
-        x = width - textwidth - 10
-        y = height - textheight - 10
+        #x = width - textwidth - 10
+        #y = height - textheight - 10
+        # Position the text at the top left
+        x = 10
+        y = 10  
         draw.text((x, y), text, font=font, fill="white")
         
         images[name] = ImageTk.PhotoImage(img)

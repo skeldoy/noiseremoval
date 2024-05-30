@@ -17,6 +17,7 @@ Jinja2==3.1.4
 keras==3.3.3
 kiwisolver==1.4.5
 libclang==18.1.1
+lightning-utilities==0.11.2
 Markdown==3.6
 markdown-it-py==3.0.0
 MarkupSafe==2.1.5
@@ -39,6 +40,7 @@ nvidia-cusparse-cu12==12.1.0.106
 nvidia-nccl-cu12==2.20.5
 nvidia-nvjitlink-cu12==12.4.127
 nvidia-nvtx-cu12==12.1.105
+opencv-python==4.9.0.80
 opt-einsum==3.3.0
 optree==0.11.0
 packaging==24.0
@@ -57,6 +59,7 @@ tensorflow==2.16.1
 tensorflow-io-gcs-filesystem==0.37.0
 termcolor==2.4.0
 torch==2.3.0
+torchmetrics==1.4.0.post0
 torchvision==0.18.0
 triton==2.3.0
 typing_extensions==4.11.0

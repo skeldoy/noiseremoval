@@ -45,6 +45,9 @@ Then we have a couple of ways to denoise:
 **BlindSpot** (pytorch): Another approach using CNN. Very dramatic results.
 
 
+**cGAN** (pytorch): Conditional GAN. No idea if it works.
+
+
 **Visualize**: A tool for comparing all the four images.
 
 

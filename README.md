@@ -42,10 +42,13 @@ Then we have a couple of ways to denoise:
 **CycleGAN** (tensorflow): The most promising of the three.
 
 
+**BlindSpot** (pytorch): Another approach using CNN. Very dramatic results.
+
+
 **Visualize**: A tool for comparing all the four images.
 
 
-**Tracker**: A basic resnet tracker for doing bounding boxes.
+**Tracker**: A very basic resnet tracker for doing bounding boxes on interesting stuff in the images.
 
 
 ## Caveats:

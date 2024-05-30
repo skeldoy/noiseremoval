@@ -7,7 +7,8 @@ dirs = {
     "training": "../data/training",
     "autoencoders": "../data/autoencoders",
     "n2n": "../data/n2n",
-    "cyclegan": "../data/cyclegan"
+    "cyclegan": "../data/cyclegan",
+    "blindspot": "../data/blindspot"
 }
 
 # Get list of image files from the 'training' directory
@@ -22,8 +23,10 @@ def load_images(index):
     for name, path in dirs.items():
         img_path = os.path.join(path, file_list[index])
         img = Image.open(img_path)
-        img = img.resize((screen_width // 2, screen_height // 2), Image.LANCZOS)
-        
+        #img = img.resize((screen_width // 2, screen_height // 2), Image.LANCZOS)
+        scale_factor = min((screen_width /1024, screen_height / 576))
+        scale_factor = scale_factor / 3.5
+        img = img.resize((int(1024*scale_factor),int(576*scale_factor)), Image.LANCZOS)
         # Add overlay text
         draw = ImageDraw.Draw(img)
         try:
@@ -39,10 +42,9 @@ def load_images(index):
         #x = width - textwidth - 10
         #y = height - textheight - 10
         # Position the text at the top left
-        x = 10
+        x = 10 
         y = 10  
         draw.text((x, y), text, font=font, fill="white")
-        
         images[name] = ImageTk.PhotoImage(img)
     return images
 

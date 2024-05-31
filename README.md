@@ -1,6 +1,6 @@
-# noiseremoval
+# noiseremoval using nevral networks
 Examples of different approaches of doing noise removal with neural networks. Primary intent is imagery but this applies to ever single modality of signal. 
-The approaches are good for situations where you don't have any clean/denoised imagery to work with. Examples of that can be weird sensors, old photos, files with artifacts from compression and/or hardware. I have not gotten around to actually testing this stuff with a decent dataset, so I am not really sure how the results are. 
+The approaches are good for situations where you don't have any clean/denoised imagery to work with. Examples of that can be weird sensors, old photos, files with artifacts from compression and/or hardware. I have not gotten around to actually testing this stuff with a decent dataset, so I am not really sure how the results are. Thus far the 1555 lines of code is mainly made with mixtral, gpt-4o, codestral and some meat input. But in the future this approach is probably gonna change to be a mix of different models with a main model using langchain as a broker that will utilize codestral and gpt-4o and do lookups of various sources on the internet plus it's own repo as the main context to speed up development. Meat doing code is a bad approach for sure.
 
 ## Installing
 Make sure you have cuda 12.3 and libcudnn-frontend-dev/mantic,mantic 0.8+ds-1 all + nvidia-cudnn/mantic 8.9.2.26~cuda12+1 amd64 ... maybe other things as well.. Not really sure..
@@ -42,10 +42,16 @@ Then we have a couple of ways to denoise:
 **CycleGAN** (tensorflow): The most promising of the three.
 
 
+**BlindSpot** (pytorch): Another approach using CNN. Very dramatic results.
+
+
+**cGAN** (pytorch): Conditional GAN. No idea if it works.
+
+
 **Visualize**: A tool for comparing all the four images.
 
 
-**Tracker**: A basic resnet tracker for doing bounding boxes.
+**Tracker**: A very basic resnet tracker for doing bounding boxes on interesting stuff in the images.
 
 
 ## Caveats:

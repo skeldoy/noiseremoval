@@ -6,6 +6,7 @@ from torchvision import transforms
 from PIL import Image
 import os
 from torchmetrics.functional import structural_similarity_index_measure as ssim
+from accelerate import Accelerator
 
 # Define the actual path to your dataset directory
 root_dir = '../data/training'
@@ -87,7 +88,10 @@ optimizer = optim.Adam(model.parameters(), lr=0.001)
 scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.1)
 
 # Train the model
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+#device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+accelerator = Accelerator()
+device = accelerator.device
+
 model.to(device)
 
 num_epochs = 40  # Increase the number of epochs
@@ -107,7 +111,8 @@ for epoch in range(num_epochs):
         print(".", end='',flush=True)
         outputs = model(inputs)
         loss = ssim_loss(outputs, targets)
-        loss.backward()
+#        loss.backward()
+        accelerator.backward(loss)
         optimizer.step()
 
         running_loss += loss.item()

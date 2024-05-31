@@ -4,7 +4,7 @@ import tkinter as tk
 
 # Directories
 dirs = {
-    "training": "../data/training",
+    "training": "../data/inference",
     "autoencoders": "../data/autoencoders",
     "n2n": "../data/n2n",
     "cyclegan": "../data/cyclegan",

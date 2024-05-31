@@ -22,7 +22,7 @@ def denoise_image(image_path, save_path, model):
     denoised_img.save(save_path)
 
 # Paths to the input and output directories
-input_dir = "../data/training"
+input_dir = "../data/inference"
 output_dir = "../data/autoencoders"
 
 # Create the output directory if it does not exist

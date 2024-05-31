@@ -66,13 +66,13 @@ img_height = 576
 img_width = 1024
 input_shape = (img_height, img_width, 3)
 batch_size = 1  
-epochs = 40
+epochs = 60
 
 generator = DataGenerator(image_dir, img_height, img_width, batch_size)
 
 # Build the autoencoder
 autoencoder = build_autoencoder(input_shape)
-autoencoder.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-3), loss=tf.keras.losses.MeanAbsoluteError(reduction='sum_over_batch_size',name='mean_absolute_error')) #MAE or MSE ??
+autoencoder.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-3), loss=tf.keras.losses.MeanAbsoluteError(reduction='sum_over_batch_size',name='mean_squared_error')) #MAE or MSE ??
 
 # Load the dataset
 #noisy_images = load_dataset(image_dir, img_height, img_width)

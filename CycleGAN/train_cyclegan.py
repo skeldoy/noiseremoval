@@ -6,7 +6,7 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 
 image_data_dir = "../data"
-batch_size = 1  # Use a smaller batch size to avoid memory issues
+batch_size = 6  # Use a smaller batch size to avoid memory issues
 img_height = 576
 img_width = 1024
 
@@ -127,7 +127,7 @@ def normalize(img):
 dataset = dataset.map(lambda x, _: normalize(x))
 dataset = dataset.shuffle(buffer_size=1000)
 
-epochs = 20
+epochs = 60
 # Training loop
 for epoch in range(epochs):
     for image_batch in dataset:  # Use only the image tensors

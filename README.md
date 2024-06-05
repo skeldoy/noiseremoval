@@ -55,6 +55,9 @@ Then we have a couple of ways to denoise:
 **Tracker**: A very basic resnet tracker for doing bounding boxes on interesting stuff in the images.
 
 
+**AutoRegressor**: Train on training data and generate synthetic data using autoregressor.
+
+
 ## Caveats:
 Note that this is just example code and needs a lot of adaptation for them to work on your datasets.
 

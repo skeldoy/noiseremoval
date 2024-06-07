@@ -51,7 +51,7 @@ class Autoencoder(nn.Module):
         x = F.relu(self.enc3(x))
         x = F.relu(self.dec1(x))
         x = F.relu(self.dec2(x))
-        x = torch.sigmoid(self.dec3(x))
+        x = torch.tanh(self.dec3(x))  # Using tanh instead of sigmoid
         return x
 
 # Load the model
@@ -75,7 +75,7 @@ os.makedirs(output_dir, exist_ok=True)
 
 dataiter = iter(inferenceloader)
 
-for i in range(200):
+for i in range(20):
     images = next(dataiter)
     images = images.to(device)
     outputs = net(images)

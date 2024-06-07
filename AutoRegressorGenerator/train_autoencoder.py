@@ -52,7 +52,7 @@ class Autoencoder(nn.Module):
         x = F.relu(self.enc3(x))
         x = F.relu(self.dec1(x))
         x = F.relu(self.dec2(x))
-        x = torch.sigmoid(self.dec3(x))
+        x = torch.tanh(self.dec3(x))  # Using tanh instead of sigmoid
         return x
 
 # Training setup

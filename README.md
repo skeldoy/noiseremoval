@@ -1,4 +1,4 @@
-# noiseremoval using nevral networks
+# noiseremoval using neural networks
 Examples of different approaches of doing noise removal with neural networks. 
 
 The approaches are good for situations where you don't have any clean/denoised imagery to work with. Examples of that can be weird sensors, old photos, files with artifacts from compression and/or hardware. I have not gotten around to actually testing this stuff with a decent dataset, so I am not really sure how the results are. Thus far the 1555 lines of code is mainly made with mixtral, gpt-4o, codestral and some meat input. But in the future this approach is probably gonna change to be a mix of different models with a main model using langchain as a broker that will utilize codestral and gpt-4o and do lookups of various sources on the internet plus it's own repo as the main context to speed up development. Meat doing code is a bad approach for sure - so I'll move away from that as the toolchain progresses.

@@ -127,7 +127,8 @@ while True:
         print(f"Error executing code: {e}")
     print("----------------------------------------------------------------------- Execution done..")
     # Send the answer to second machine and get its response
-    response = second_client.chat(model="llama3", messages=[{"role": "user", "content": output}])
+    next_instruction = "The last LLM generated: \"\"\" ", f'{code_to_execute}', " \"\"\"\" and the output of running it was:", f'{output}'
+    response = second_client.chat(model="llama3", messages=[{"role": "user", "content": next_instruction}])
     second_answer = response["message"]["content"]
     print("Second Machine:")
     print(second_answer)

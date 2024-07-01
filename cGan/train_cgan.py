@@ -41,36 +41,36 @@ class Discriminator(nn.Module):
     def __init__(self):
         super(Discriminator, self).__init__()
         self.main = nn.Sequential(
-            # input is (3) x 1024 x 576
+            # Convolutional layers
             nn.Conv2d(3, 64, kernel_size=4, stride=2, padding=1),
+            nn.BatchNorm2d(64),
             nn.LeakyReLU(0.2, inplace=True),
-            # state size: (64) x 512 x 288
+
             nn.Conv2d(64, 128, kernel_size=4, stride=2, padding=1),
             nn.BatchNorm2d(128),
             nn.LeakyReLU(0.2, inplace=True),
-            # state size: (128) x 256 x 144
-            nn.Conv2d(128, 256, kernel_size=4, stride=2, padding=1),
-            nn.BatchNorm2d(256),
-            nn.LeakyReLU(0.2, inplace=True),
-            # state size: (256) x 128 x 72
-            nn.Conv2d(256, 512, kernel_size=4, stride=2, padding=1),
+
+            nn.Conv2d(128, 512, kernel_size=4, stride=2, padding=1),
             nn.BatchNorm2d(512),
             nn.LeakyReLU(0.2, inplace=True),
-            # state size: (512) x 64 x 36
-            nn.Conv2d(512, 1024, kernel_size=4, stride=1, padding=2),
-            #nn.BatchNorm2d(1024),
-            #nn.LeakyReLU(0.2, inplace=True),
-            # state size: (1024) x 32 x 18
-            nn.Conv2d(1024, 512, kernel_size=4, stride=2, padding=1),
-            nn.BatchNorm2d(512),
-            nn.LeakyReLU(0.2, inplace=True),
-            # state size: (512) x 16 x 9
+
+            # Flatten the tensor before applying the linear layer
             nn.Flatten(),
-            nn.Linear(1024 * 16 * 18, 1),
+            # Calculate the correct input size for the linear layer based on the output shape of your convolutional layers
+            # In this case, it should be 512 * (H/8) * (W/8), where H and W are the height and width dimensions of your input images.
+            #nn.Linear(512 * (576/8) * (1024/8), 1),
+            #nn.Linear(512 * 73 * 129, 1),
+            #nn.Linear(32 * 512 * 73 * 129, 1),
+            nn.Linear(8192, 1),
             nn.Sigmoid()
         )
     def forward(self, x):
-        return self.main(x)
+        print("Shape before flatten:", x.shape)  # Debugging line: output is: torch.Size([32, 3, 35, 35])
+        x = self.main[:-1](x)  # Apply all layers except the last one (flatten and linear layer)
+        print("Shape after conv layers:", x.shape)  # Debugging line output is: torch.Size([32, 1])
+        x = torch.flatten(x, 1)  # Flatten the tensor
+        print("Shape after flatten:", x.shape)  # Debugging line output is: torch.Size([32, 1])
+        return self.main[-1](x)  # Apply the last linear layer
 
 # Data loader
 transform = transforms.Compose([
@@ -100,8 +100,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Hyperparameters
 latent_dim = 100 # Define the dimension of noise vector
-image_height = 1024 # Define the height of your input images
-image_width = 576 # Define the width of your input images
+image_height = 576 # Define the height of your input images
+image_width = 1024 # Define the width of your input images
 num_epochs = 50
 batch_size = 32
 lr = 0.0002
@@ -148,8 +148,10 @@ for epoch in range(num_epochs):
         z = torch.randn((b_size, latent_dim, 1, 1), device=device)
 
         fake_images = generator(z)
+        print(fake_images.shape) # (batch size, channels, height, width) .. Is: torch.Size([32, 3, 35, 35])
         outputs = discriminator(fake_images)
-
+        print(outputs.shape)  #should be batch size, 1 .. Is: torch.Size([32, 1])
+        print(real_labels.shape) #should be batch size, 1 .. Is: torch.Size([32, 1])
         g_loss = criterion(outputs, real_labels)
 
         g_loss.backward()
@@ -157,17 +159,18 @@ for epoch in range(num_epochs):
 
         # Train Discriminator
         optimizer_D.zero_grad()
-
-        real_loss = criterion(discriminator(images), real_labels)
+        print(outputs.shape) #should be batch_size, 1 .. Is: torch.Size([32, 1])
         fake_loss = criterion(discriminator(fake_images.detach()), fake_labels)
-        d_loss = (real_loss + fake_loss) / 2
+        #real_loss = criterion(discriminator(images), real_labels)
+        #d_loss = (real_loss + fake_loss) / 2
+        d_loss = fake_loss
 
         d_loss.backward()
         optimizer_D.step()
 
 
         # Train Generator
-        z = torch.randn(images.size(0), 3, image_size, image_size).to(device)
+        z = torch.randn(images.size(0), 100, image_height, image_width).to(device)
         fake_images = generator(z)
         outputs = discriminator(fake_images)
         g_loss = criterion(outputs, real_labels)

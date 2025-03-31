@@ -15,6 +15,11 @@ embedder = SentenceTransformer('all-MiniLM-L6-v2')
 EMBEDDING_DIM = 384  # Dimensions for all-MiniLM-L6-v2
 index = faiss.IndexFlatL2(EMBEDDING_DIM)
 
+import re
+
+def remove_emojis(text):
+    return re.sub(r'[\U0001F600-\U0001F64F\\U0001F300-\U0001F5FF\\U0001F680-\U0001F6FF\\U0001F700-\U0001F77F\\U0001F780-\U0001F7FF\\U0001F800-\U0001F8FF\\U0001F900-\U0001F9FF\\U0001FA00-\U0001FA6F\\U0001FA70-\U0001FAFF\\U0001FB00-\U0001FBFF\\U0001FC00-\U0001FCFF\\U0001FD00-\U0001FDFF\\U0001FE00-\U0001FEFF\\U0001FF00-\U0001FFFF]', '', text)
+
 def get_embedding(text):
     return embedder.encode(text)
 
@@ -38,11 +43,14 @@ def transcribe_audio():
     return " ".join([segment.text for segment in segments])
 
 def generate_response(prompt):
-    response = ollama.generate(model="mistral", prompt=prompt)
+    response = ollama.generate(model="gemma2", prompt=prompt)
     return response["response"]
 
+
 def synthesize_speech(text, output_file="hal_output.wav"):
-    tts.to_file(text, output_file)
+    cleaned_text = remove_emojis(text)  # Remove emojis
+    tts.tts_to_file(text=cleaned_text, file_path=output_file)  # Correct method for Coqui TTS
+
 
 def play_audio(file):
     sample_rate, audio = read(file)
@@ -52,8 +60,9 @@ def play_audio(file):
 # Main loop
 while True:
     print("Listening...")
-    record_audio()
-    user_text = transcribe_audio()
+#    record_audio()
+#    user_text = transcribe_audio()
+    user_text = "Hello my dear friend. How are you today?"
     print(f"User: {user_text}")
     
     # Retrieve context from FAISS
@@ -68,3 +77,4 @@ while True:
     
     # Store response in FAISS
     add_to_faiss(f"User: {user_text} | HAL: {hal_response}")
+
